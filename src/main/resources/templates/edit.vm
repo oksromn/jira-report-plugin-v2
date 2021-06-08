@@ -1,0 +1,52 @@
+<html>
+<head>
+    <title>Edit Issue — Issue CRUD Tutorial</title>
+    <meta name="decorator" content="atl.general">
+</head>
+<body class="page-type-admin">
+    <div class="content-container" id="issue-crud-container">
+
+        <div class="content-body">
+            <h1>Edit issue $issue.getKey()</h1>
+
+            #if ($errors.size()>0)
+                <div class="aui-message error shadowed">
+                    #foreach($error in $errors)
+                        <p class="title">
+                            <span class="aui-icon icon-error"></span>
+                            <strong>$error</strong>
+                        </p>
+                    #end
+                </div>
+                <!-- .aui-message -->
+            #end
+
+            <div class="create-issue-panel">
+
+                <form method="post" id="h" action="issuecrud" class="aui">
+                    <input type="hidden" name="actionType" value="edit">
+                    <input type="hidden" name="key" value="$issue.getKey()">
+                    <div class="field-group">
+                        <label for="h-fsummary">
+                            Summary
+                            <span class="aui-icon icon-required"></span>
+                            <span class="content">required</span>
+                        </label>
+                        <input id="h-fsummary" class="text long-field" type="text" name="summary" value="$issue.getSummary()">
+                    </div>
+                    <div class="field-group">
+                        <label for="h-fdescription">
+                            Description
+                        </label>
+                        <textarea style="height: 200px; width: 300px" id="h-fdescription" name="description">#if($issue.getDescription() && !$issue.getDescription.isEmpty())$issue.getDescription()#end</textarea>
+                    </div>
+                    <div class="buttons">
+                        <input class="button" type="submit" value="Update">
+                        <a href="issuecrud">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

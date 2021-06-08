@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <title>All Tutorial Issues &mdash; Issue CRUD Tutorial</title>
+        <meta name="decorator" content="atl.general">
+    </head>
+    <body class="page-type-admin">
+        <div class="content-container" id="issue-crud-container">
+            <div class="content-body">
+                <h1>Personal time report for user "$user.getName()" in #if ($project) the "$project.getName()" project #else all projects #end</h1>
+
+                #if ($errors && $errors.size()>0)
+                    <div class="aui-message error shadowed crud-error">
+                        #foreach($error in $errors)
+                            <p class="title">
+                                <span class="aui-icon icon-error"></span>
+                                <strong>$error</strong>
+                            </p>
+                        #end
+                    </div>
+                #end
+
+                #if ($issues.size() > 0)
+                    <div class="issues">
+                        <table class="aui">
+                            <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Summary</th>
+                                <th>Description</th>
+                                <th>Assignee</th>
+                                <th>Reporter</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                #foreach( $issue in $issues )
+                                <tr class="issue-line">
+                                    <td class="issue-key">$issue.getKey()</td>
+                                    <td class="issue-summary">$issue.getSummary()</td>
+                                    <td class="issue-description">
+                                        #if($issue.getDescription())
+                                            $issue.getDescription()
+                                         #end
+                                    </td>
+                                    <td>
+                                        $issue.getAssignee().getName()
+                                    </td>
+                                    <td>
+                                        $issue.getReporter().getName()
+                                    </td>
+                                    <td>
+                                        <a href="issuecrud?actionType=edit&key=$issue.getKey()" class="edit-issue">Edit</a>
+                                        <a href="#" class="delete-issue" data-key="$issue.getKey()">Delete</a>
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                #end
+                <form method="get" action="issuecrud" class="aui">
+                    <input type="hidden" name="actionType" value="new">
+                    <input type="submit" class="button" value="Create new issue">
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

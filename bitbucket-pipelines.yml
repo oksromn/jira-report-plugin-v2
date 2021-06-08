@@ -1,0 +1,10 @@
+image: codeclou/docker-atlassian-sdk:sdk-6.3.10
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - maven
+        script:
+          - atlas-version
+          - atlas-mvn clean install

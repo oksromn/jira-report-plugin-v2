@@ -1,0 +1,8 @@
+amps-standalone/
+target/
+*.log
+*.ipr
+*.iml
+*.iws
+*.idea
+.idea

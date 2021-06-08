@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <title>Create Report</title>
+        <meta name="decorator" content="atl.general">
+    </head>
+    <body class="page-type-admin">
+        <div class="content-container" id="issue-crud-container">
+            <div class="content-body">
+                <h1 style="margin: 10px 0">Create Report</h1>
+
+                <div class="create-report-panel">
+                    #if ($errors && $errors.size()>0)
+                        <div class="aui-message error shadowed crud-error">
+                            #foreach($error in $errors)
+                                <p class="title">
+                                    <span class="aui-icon icon-error"></span>
+                                    <strong>$error</strong>
+                                </p>
+                            #end
+                        </div>
+                    #end
+
+                    <form method="post" id="h" action="create-report" class="aui">
+                        <input type="hidden" name="actionType" value="new">
+
+                        <div class="field-group">
+                            <label for="project">
+                                Project
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <select name="project" id="project" class="text long-field">
+                                <option value="">All</option>
+
+                                #foreach( $project in $allProjects )
+                                    <option value="$project.getKey()">$project.getName()</option>
+                                #end
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="user">
+                                User
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <select name="user" id="user" class="text long-field">
+                                #foreach( $user in $allUsers )
+                                    <option value="$user.getKey()">$user.getName()</option>
+                                #end
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="dateStart">
+                                Start date
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <input id="dateStart" class="text long-field" type="date" name="dateStart">
+                        </div>
+                        <div class="field-group">
+                            <label for="dateEnd">
+                                End date
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <input id="dateEnd" class="text long-field" type="date" name="dateEnd">
+                        </div>
+
+                        <div class="buttons">
+                            <input class="button" type="submit" value="Create">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>
