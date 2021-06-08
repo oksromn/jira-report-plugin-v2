@@ -1,10 +1,8 @@
 package com.example.plugins.report.servlet;
 
 import com.atlassian.jira.bc.ServiceOutcome;
-import com.atlassian.jira.bc.issue.IssueService;
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.bc.project.ProjectService;
-import com.atlassian.jira.config.ConstantsManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.issue.search.SearchResults;
@@ -43,11 +41,10 @@ public class CreationReport extends HttpServlet {
     private static final String NEW_REPORT_TEMPLATE = "/templates/new.vm";
     private static final String GENERATED_REPORT_TEMPLATE = "/templates/report.vm";
 
-    public CreationReport(IssueService issueService, ProjectService projectService,
+    public CreationReport(ProjectService projectService,
                           SearchService searchService,
                           TemplateRenderer templateRenderer,
                           JiraAuthenticationContext authenticationContext,
-                          ConstantsManager constantsManager,
                           UserManager userManager) {
         this.projectService = projectService;
         this.searchService = searchService;
