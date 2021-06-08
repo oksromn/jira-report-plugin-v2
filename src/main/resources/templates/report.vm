@@ -24,43 +24,39 @@
                         <table class="aui">
                             <thead>
                             <tr>
-                                <th>Key</th>
-                                <th>Summary</th>
-                                <th>Description</th>
                                 <th>Assignee</th>
-                                <th>Reporter</th>
-                                <th></th>
+                                <th>Task</th>
+                                <th>Time spent</th>
+                                <th>Status</th>
                             </tr>
                             </thead>
                             <tbody>
-                                #foreach( $issue in $issues )
-                                <tr class="issue-line">
-                                    <td class="issue-key">$issue.getKey()</td>
-                                    <td class="issue-summary">$issue.getSummary()</td>
-                                    <td class="issue-description">
-                                        #if($issue.getDescription())
-                                            $issue.getDescription()
-                                         #end
-                                    </td>
-                                    <td>
-                                        $issue.getAssignee().getName()
-                                    </td>
-                                    <td>
-                                        $issue.getReporter().getName()
-                                    </td>
-                                    <td>
-                                        <a href="issuecrud?actionType=edit&key=$issue.getKey()" class="edit-issue">Edit</a>
-                                        <a href="#" class="delete-issue" data-key="$issue.getKey()">Delete</a>
-                                    </td>
-                                </tr>
+                                #foreach($issue in $issues)
+                                    <tr class="issue-line">
+                                        <td>$issue.getAssignee().getName()</td>
+                                        <td>$issue.getSummary()</td>
+                                        <td>
+                                            #if ($issue.getTimeSpent())
+                                                #set ($millis = $issue.getTimeSpent() * 1000)
+                                                #set ($seconds = ($millis / 1000) % 60)
+                                                #set ($minutes = ($millis / (1000 * 60)) % 60)
+                                                #set ($hours = ($millis / (1000 * 60 * 60)) % 24)
+                                                #if ($hours > 1) $hours h #end
+                                                #if ($minutes > 1) $minutes m #end
+                                            #else
+                                                –
+                                            #end
+                                        </td>
+                                        <td>$issue.getStatus().getSimpleStatus().getName()</td>
+                                    </tr>
                                 #end
                             </tbody>
                         </table>
                     </div>
                 #end
-                <form method="get" action="issuecrud" class="aui">
+                <form method="get" action="create-report" class="aui">
                     <input type="hidden" name="actionType" value="new">
-                    <input type="submit" class="button" value="Create new issue">
+                    <input type="submit" class="button" value="Back">
                 </form>
             </div>
         </div>
