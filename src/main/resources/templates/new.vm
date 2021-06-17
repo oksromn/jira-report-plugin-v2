@@ -20,37 +20,9 @@
                         </div>
                     #end
 
-                    <h4>Personal report</h4>
-                    <form method="post" id="h" action="create-report" class="aui">
-                        <input type="hidden" name="actionType" value="new">
-
-                        <div class="field-group">
-                            <label for="project">
-                                Project
-                                <span class="aui-icon icon-required"></span>
-                                <span class="content">required</span>
-                            </label>
-                            <select name="project" id="project" class="text long-field">
-                                <option value="">All</option>
-
-                                #foreach( $project in $allProjects )
-                                    <option value="$project.getKey()">$project.getName()</option>
-                                #end
-                            </select>
-                        </div>
-
-                        <div class="field-group">
-                            <label for="user">
-                                User
-                                <span class="aui-icon icon-required"></span>
-                                <span class="content">required</span>
-                            </label>
-                            <select name="user" id="user" class="text long-field">
-                                #foreach( $user in $allUsers )
-                                    <option value="$user.getKey()">$user.getName()</option>
-                                #end
-                            </select>
-                        </div>
+                    <h4>General project report</h4>
+                    <form method="post" action="create-report" class="aui">
+                        <input type="hidden" name="actionType" value="generalReport">
 
                         <div class="field-group">
                             <label for="dateStart">
@@ -99,6 +71,7 @@
                             </label>
                             <input id="dateStart" class="text long-field" type="date" name="dateStart">
                         </div>
+
                         <div class="field-group">
                             <label for="dateEnd">
                                 End date
@@ -113,10 +86,36 @@
                         </div>
                     </form>
 
+                    <h4>Personal report</h4>
+                    <form method="post" id="h" action="create-report" class="aui">
+                        <input type="hidden" name="actionType" value="new">
 
-                    <h4>General project report</h4>
-                    <form method="post" action="create-report" class="aui">
-                        <input type="hidden" name="actionType" value="generalReport">
+                        <div class="field-group">
+                            <label for="user">
+                                User
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <select name="user" id="user" class="text long-field">
+                                #foreach( $user in $allUsers )
+                                    <option value="$user.getKey()">$user.getName()</option>
+                                #end
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="project">
+                                Project
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <select name="project" id="project" class="text long-field">
+                                #foreach( $project in $allProjects )
+                                    <option value="">All</option>
+                                    <option value="$project.getKey()">$project.getName()</option>
+                                #end
+                            </select>
+                        </div>
 
                         <div class="field-group">
                             <label for="dateStart">
@@ -139,6 +138,7 @@
                             <input class="button" type="submit" value="Create">
                         </div>
                     </form>
+
                 </div>
             </div>
 

@@ -39,7 +39,7 @@ public class CreationReport extends HttpServlet {
     private final UserManager userManager;
 
     private static final String NEW_REPORT_TEMPLATE = "/templates/new.vm";
-    private static final String GENERATED_REPORT_TEMPLATE = "/templates/report.vm";
+    private static final String PERSONAL_REPORT_TEMPLATE = "/templates/personal-personal-report.vm";
     private static final String PROJECT_TIME_REPORT = "/templates/project-time.vm";
     private static final String GENERAL_PROJECT_REPORT = "/templates/general-report.vm";
 
@@ -81,14 +81,14 @@ public class CreationReport extends HttpServlet {
 
         if (type.equals("PersonalReport")) {
             if (projectId == null) {
-                query = jqlClauseBuilder.createdBetween(startDate, endDate).and().assigneeUser(user.getName()).buildQuery();
+                query = jqlClauseBuilder.createdBetween(startDate, endDate).and().assigneeUser(user.getName()).and().status("DONE").buildQuery();
             } else {
-                query = jqlClauseBuilder.createdBetween(startDate, endDate).and().assigneeUser(user.getName()).and().project(projectId).buildQuery();
+                query = jqlClauseBuilder.createdBetween(startDate, endDate).and().assigneeUser(user.getName()).and().project(projectId).and().status("DONE").buildQuery();
             }
         } else if (type.equals("ProjectTimeReport")) {
-            query = jqlClauseBuilder.createdBetween(startDate, endDate).and().project(projectId).buildQuery();
+            query = jqlClauseBuilder.createdBetween(startDate, endDate).and().project(projectId).and().status("DONE").buildQuery();
         } else {
-            query = jqlClauseBuilder.createdBetween(startDate, endDate).buildQuery();
+            query = jqlClauseBuilder.createdBetween(startDate, endDate).and().status("DONE").buildQuery();
         }
 
         PagerFilter pagerFilter = PagerFilter.getUnlimitedFilter();
@@ -158,7 +158,7 @@ public class CreationReport extends HttpServlet {
         context.put("project", project);
         context.put("issues", issues);
         resp.setContentType("text/html;charset=utf-8");
-        templateRenderer.render(GENERATED_REPORT_TEMPLATE, context, resp.getWriter());
+        templateRenderer.render(PERSONAL_REPORT_TEMPLATE, context, resp.getWriter());
     }
 
     private void handleProjectTimeReport(HttpServletRequest req, HttpServletResponse resp) throws IOException {
