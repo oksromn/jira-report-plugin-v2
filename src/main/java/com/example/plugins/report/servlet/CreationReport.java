@@ -39,7 +39,7 @@ public class CreationReport extends HttpServlet {
     private final UserManager userManager;
 
     private static final String NEW_REPORT_TEMPLATE = "/templates/new.vm";
-    private static final String PERSONAL_REPORT_TEMPLATE = "/templates/personal-personal-report.vm";
+    private static final String PERSONAL_REPORT_TEMPLATE = "/templates/personal-report.vm";
     private static final String PROJECT_TIME_REPORT = "/templates/project-time.vm";
     private static final String GENERAL_PROJECT_REPORT = "/templates/general-report.vm";
 
