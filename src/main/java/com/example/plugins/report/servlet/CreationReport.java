@@ -40,6 +40,7 @@ public class CreationReport extends HttpServlet {
 
     private static final String NEW_REPORT_TEMPLATE = "/templates/new.vm";
     private static final String GENERATED_REPORT_TEMPLATE = "/templates/report.vm";
+    private static final String PROJECT_TIME_REPORT = "/templates/project-time.vm";
 
     public CreationReport(ProjectService projectService,
                           SearchService searchService,
@@ -73,20 +74,31 @@ public class CreationReport extends HttpServlet {
         return userManager.getAllApplicationUsers();
     }
 
-    private List<Issue> getIssues(ApplicationUser user, String startDate, String endDate, Long projectId) {
+    private List<Issue> getIssues(String type, ApplicationUser user, String startDate, String endDate, Long projectId) {
         JqlClauseBuilder jqlClauseBuilder = JqlQueryBuilder.newClauseBuilder();
         Query query;
 
-        if (projectId == null) {
-            query = jqlClauseBuilder.createdBetween(startDate, endDate).buildQuery();
-        } else {
+        if (type.equals("PersonalReport")) {
+            if (projectId == null) {
+                query = jqlClauseBuilder.createdBetween(startDate, endDate).and().assigneeUser(user.getName()).buildQuery();
+            } else {
+                query = jqlClauseBuilder.createdBetween(startDate, endDate).and().assigneeUser(user.getName()).and().project(projectId).buildQuery();
+            }
+        } else if (type.equals("ProjectTimeReport")) {
             query = jqlClauseBuilder.createdBetween(startDate, endDate).and().project(projectId).buildQuery();
+        } else {
+            query = jqlClauseBuilder.createdBetween(startDate, endDate).buildQuery();
         }
+
         PagerFilter pagerFilter = PagerFilter.getUnlimitedFilter();
 
         SearchResults searchResults = null;
         try {
-            searchResults = searchService.search(user, query, pagerFilter);
+            if (user == null) {
+                searchResults = searchService.search(authenticationContext.getLoggedInUser(), query, pagerFilter);
+            } else {
+                searchResults = searchService.search(user, query, pagerFilter);
+            }
         } catch (SearchException e) {
             e.printStackTrace();
         }
@@ -98,13 +110,16 @@ public class CreationReport extends HttpServlet {
         String actionType = req.getParameter("actionType");
 
         if (actionType.equals("new")) {
-            handleReportCreation(req, resp);
-        } else {
+            handlePersonalReport(req, resp);
+        } else if (actionType.equals("projectTime")) {
+            handleProjectTimeReport(req, resp);
+        }
+        else {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
-    private void handleReportCreation(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void handlePersonalReport(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Map<String, Object> context = new HashMap<>();
 
         String projectParam = req.getParameter("project");
@@ -135,7 +150,7 @@ public class CreationReport extends HttpServlet {
         ApplicationUser user = userManager.getUser(userParam);
         Project project = projectService.getProjectByKey(projectParam).getProject();
 
-        List<Issue> issues = getIssues(user, dateStart, dateEnd, project == null ? null : project.getId());
+        List<Issue> issues = getIssues("PersonalReport", user, dateStart, dateEnd, project == null ? null : project.getId());
 
         context.put("user", user);
         context.put("project", project);
@@ -144,4 +159,39 @@ public class CreationReport extends HttpServlet {
         templateRenderer.render(GENERATED_REPORT_TEMPLATE, context, resp.getWriter());
     }
 
+    private void handleProjectTimeReport(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Map<String, Object> context = new HashMap<>();
+
+        String projectParam = req.getParameter("project");
+        String dateStart = req.getParameter("dateStart");
+        String dateEnd = req.getParameter("dateEnd");
+
+        boolean errors = false;
+        if (dateEnd == null || dateEnd.isEmpty()) {
+            context.put("errors", Collections.singletonList("End date is required."));
+            errors = true;
+        }
+        if (dateStart == null || dateStart.isEmpty()) {
+            context.put("errors", Collections.singletonList("Start date is required."));
+            errors = true;
+        }
+        if (projectParam == null || projectParam.isEmpty()) {
+            context.put("errors", Collections.singletonList("Project is required."));
+            errors = true;
+        }
+        if (errors) {
+            context.put("allUsers", getAllUsers());
+            context.put("allProjects", getAllProjects());
+            templateRenderer.render(NEW_REPORT_TEMPLATE, context, resp.getWriter());
+            return;
+        }
+
+        Project project = projectService.getProjectByKey(projectParam).getProject();
+        List<Issue> issues = getIssues("ProjectTimeReport", null, dateStart, dateEnd, project.getId());
+
+        context.put("project", project);
+        context.put("issues", issues);
+        resp.setContentType("text/html;charset=utf-8");
+        templateRenderer.render(PROJECT_TIME_REPORT, context, resp.getWriter());
+    }
 }

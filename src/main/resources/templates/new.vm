@@ -20,6 +20,7 @@
                         </div>
                     #end
 
+                    <h4>Personal report</h4>
                     <form method="post" id="h" action="create-report" class="aui">
                         <input type="hidden" name="actionType" value="new">
 
@@ -47,6 +48,45 @@
                             <select name="user" id="user" class="text long-field">
                                 #foreach( $user in $allUsers )
                                     <option value="$user.getKey()">$user.getName()</option>
+                                #end
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="dateStart">
+                                Start date
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <input id="dateStart" class="text long-field" type="date" name="dateStart">
+                        </div>
+                        <div class="field-group">
+                            <label for="dateEnd">
+                                End date
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <input id="dateEnd" class="text long-field" type="date" name="dateEnd">
+                        </div>
+
+                        <div class="buttons">
+                            <input class="button" type="submit" value="Create">
+                        </div>
+                    </form>
+
+                    <h4>Report on project time</h4>
+                    <form method="post" action="create-report" class="aui">
+                        <input type="hidden" name="actionType" value="projectTime">
+
+                        <div class="field-group">
+                            <label for="project">
+                                Project
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <select name="project" id="project" class="text long-field">
+                                #foreach( $project in $allProjects )
+                                    <option value="$project.getKey()">$project.getName()</option>
                                 #end
                             </select>
                         </div>
