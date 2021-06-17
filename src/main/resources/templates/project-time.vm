@@ -56,6 +56,10 @@
                         </table>
                     </div>
                 #end
+                <form method="get" action="create-report" class="aui">
+                    <input type="hidden" name="actionType" value="new">
+                    <input type="submit" class="button" value="Back">
+                </form>
             </div>
         </div>
     </body>

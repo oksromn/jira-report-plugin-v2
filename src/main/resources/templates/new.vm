@@ -112,6 +112,33 @@
                             <input class="button" type="submit" value="Create">
                         </div>
                     </form>
+
+
+                    <h4>General project report</h4>
+                    <form method="post" action="create-report" class="aui">
+                        <input type="hidden" name="actionType" value="generalReport">
+
+                        <div class="field-group">
+                            <label for="dateStart">
+                                Start date
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <input id="dateStart" class="text long-field" type="date" name="dateStart">
+                        </div>
+                        <div class="field-group">
+                            <label for="dateEnd">
+                                End date
+                                <span class="aui-icon icon-required"></span>
+                                <span class="content">required</span>
+                            </label>
+                            <input id="dateEnd" class="text long-field" type="date" name="dateEnd">
+                        </div>
+
+                        <div class="buttons">
+                            <input class="button" type="submit" value="Create">
+                        </div>
+                    </form>
                 </div>
             </div>
 

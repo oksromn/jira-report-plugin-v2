@@ -41,6 +41,7 @@ public class CreationReport extends HttpServlet {
     private static final String NEW_REPORT_TEMPLATE = "/templates/new.vm";
     private static final String GENERATED_REPORT_TEMPLATE = "/templates/report.vm";
     private static final String PROJECT_TIME_REPORT = "/templates/project-time.vm";
+    private static final String GENERAL_PROJECT_REPORT = "/templates/general-report.vm";
 
     public CreationReport(ProjectService projectService,
                           SearchService searchService,
@@ -113,8 +114,9 @@ public class CreationReport extends HttpServlet {
             handlePersonalReport(req, resp);
         } else if (actionType.equals("projectTime")) {
             handleProjectTimeReport(req, resp);
-        }
-        else {
+        } else if (actionType.equals("generalReport")) {
+            handleGeneralReport(req, resp);
+        } else {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
@@ -193,5 +195,34 @@ public class CreationReport extends HttpServlet {
         context.put("issues", issues);
         resp.setContentType("text/html;charset=utf-8");
         templateRenderer.render(PROJECT_TIME_REPORT, context, resp.getWriter());
+    }
+
+    private void handleGeneralReport(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Map<String, Object> context = new HashMap<>();
+
+        String dateStart = req.getParameter("dateStart");
+        String dateEnd = req.getParameter("dateEnd");
+
+        boolean errors = false;
+        if (dateEnd == null || dateEnd.isEmpty()) {
+            context.put("errors", Collections.singletonList("End date is required."));
+            errors = true;
+        }
+        if (dateStart == null || dateStart.isEmpty()) {
+            context.put("errors", Collections.singletonList("Start date is required."));
+            errors = true;
+        }
+        if (errors) {
+            context.put("allUsers", getAllUsers());
+            context.put("allProjects", getAllProjects());
+            templateRenderer.render(NEW_REPORT_TEMPLATE, context, resp.getWriter());
+            return;
+        }
+
+        List<Issue> issues = getIssues("GeneralReport", null, dateStart, dateEnd, null);
+
+        context.put("issues", issues);
+        resp.setContentType("text/html;charset=utf-8");
+        templateRenderer.render(GENERAL_PROJECT_REPORT, context, resp.getWriter());
     }
 }

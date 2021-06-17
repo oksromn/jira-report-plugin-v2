@@ -1,0 +1,66 @@
+<html>
+<head>
+    <title>Project Time Report</title>
+    <meta name="decorator" content="atl.general">
+</head>
+<body class="page-type-admin">
+<div class="content-container" id="issue-crud-container">
+    <div class="content-body">
+        <h1>General project report</h1>
+
+        #if ($errors && $errors.size()>0)
+            <div class="aui-message error shadowed crud-error">
+                #foreach($error in $errors)
+                    <p class="title">
+                        <span class="aui-icon icon-error"></span>
+                        <strong>$error</strong>
+                    </p>
+                #end
+            </div>
+        #end
+
+        #if ($issues.size() > 0)
+            <div class="issues">
+                <table class="aui">
+                    <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Assignee</th>
+                        <th>Task</th>
+                        <th>Time spent</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($issue in $issues)
+                        <tr class="issue-line">
+                            <td>$issue.getProjectObject().getName()</td>
+                            <td>$issue.getAssignee().getName()</td>
+                            <td>$issue.getSummary()</td>
+                            <td>
+                                #if ($issue.getTimeSpent())
+                                    #set ($millis = $issue.getTimeSpent() * 1000)
+                                    #set ($seconds = ($millis / 1000) % 60)
+                                    #set ($minutes = ($millis / (1000 * 60)) % 60)
+                                    #set ($hours = ($millis / (1000 * 60 * 60)) % 24)
+                                    #if ($hours > 1) $hours h #end
+                                    #if ($minutes > 1) $minutes m #end
+                                #else
+                                    –
+                                #end
+                            </td>
+                            <td>$issue.getStatus().getSimpleStatus().getName()</td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        #end
+        <form method="get" action="create-report" class="aui">
+            <input type="hidden" name="actionType" value="new">
+            <input type="submit" class="button" value="Back">
+        </form>
+    </div>
+</div>
+</body>
+</html>
