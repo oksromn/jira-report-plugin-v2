@@ -219,7 +219,29 @@ public class CreationReport extends HttpServlet {
             return;
         }
 
-        List<Issue> issues = getIssues("GeneralReport", null, dateStart, dateEnd, null);
+        List<Issue> allIssues = getIssues("GeneralReport", null, dateStart, dateEnd, null);
+        Map<String, Map<String, Long>> issues = new HashMap<>();
+
+        assert allIssues != null;
+        for (Issue issue : allIssues) {
+            String name = issue.getAssignee().getName();
+            String project = issue.getProjectObject().getName();
+            Long timeSpent = issue.getTimeSpent();
+
+            if (issues.containsKey(project)) {
+                if (issues.get(project).get(name) == null) {
+                    issues.get(project).put(name, timeSpent);
+                } else {
+                    Long oldValue = issues.get(project).get(name);
+                    Long value = oldValue + timeSpent;
+                    issues.get(project).put(name, value);
+                }
+            } else {
+                Map<String, Long> tempData = new HashMap<>();
+                tempData.put(name, issue.getTimeSpent());
+                issues.put(project, tempData);
+            }
+        }
 
         context.put("issues", issues);
         resp.setContentType("text/html;charset=utf-8");

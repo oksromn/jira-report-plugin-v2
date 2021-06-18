@@ -26,31 +26,25 @@
                     <tr>
                         <th>Project</th>
                         <th>Assignee</th>
-                        <th>Task</th>
                         <th>Time spent</th>
-                        <th>Status</th>
                     </tr>
                     </thead>
                     <tbody>
-                        #foreach($issue in $issues)
-                        <tr class="issue-line">
-                            <td>$issue.getProjectObject().getName()</td>
-                            <td>$issue.getAssignee().getName()</td>
-                            <td>$issue.getSummary()</td>
-                            <td>
-                                #if ($issue.getTimeSpent())
-                                    #set ($millis = $issue.getTimeSpent() * 1000)
+                        #foreach($project in $issues.entrySet())
+                            #foreach($person in $project.getValue().entrySet())
+                            <tr class="issue-line">
+                                <td>$project.getKey()</td>
+                                <td>$person.getKey()</td>
+                                <td>
+                                    #set ($millis = $person.getValue() * 1000)
                                     #set ($seconds = ($millis / 1000) % 60)
                                     #set ($minutes = ($millis / (1000 * 60)) % 60)
                                     #set ($hours = ($millis / (1000 * 60 * 60)) % 24)
                                     #if ($hours > 1) $hours h #end
                                     #if ($minutes > 1) $minutes m #end
-                                #else
-                                    –
-                                #end
-                            </td>
-                            <td>$issue.getStatus().getSimpleStatus().getName()</td>
-                        </tr>
+                                </td>
+                            </tr>
+                            #end
                         #end
                     </tbody>
                 </table>
