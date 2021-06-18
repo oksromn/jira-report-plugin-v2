@@ -164,7 +164,11 @@ public class CreationReport extends HttpServlet {
     private void handleProjectTimeReport(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Map<String, Object> context = new HashMap<>();
 
-        String projectParam = req.getParameter("project");
+        String[] projectParam = req.getParameterValues("project");
+
+        System.out.println("\n\n projectParam: \n\n");
+        System.out.println(Arrays.toString(projectParam));
+
         String dateStart = req.getParameter("dateStart");
         String dateEnd = req.getParameter("dateEnd");
 
@@ -177,7 +181,7 @@ public class CreationReport extends HttpServlet {
             context.put("errors", Collections.singletonList("Start date is required."));
             errors = true;
         }
-        if (projectParam == null || projectParam.isEmpty()) {
+        if (projectParam == null || projectParam.length == 0) {
             context.put("errors", Collections.singletonList("Project is required."));
             errors = true;
         }
@@ -188,10 +192,16 @@ public class CreationReport extends HttpServlet {
             return;
         }
 
-        Project project = projectService.getProjectByKey(projectParam).getProject();
-        List<Issue> issues = getIssues("ProjectTimeReport", null, dateStart, dateEnd, project.getId());
+        List<Project> projects = new ArrayList<>();
+        List<Issue> issues = new ArrayList<>();
 
-        context.put("project", project);
+        for (String projectKey: projectParam) {
+            Project project = projectService.getProjectByKey(projectKey).getProject();
+            projects.add(project);
+            issues.add((Issue) getIssues("ProjectTimeReport", null, dateStart, dateEnd, project.getId()));
+        }
+
+        context.put("projects", projects);
         context.put("issues", issues);
         resp.setContentType("text/html;charset=utf-8");
         templateRenderer.render(PROJECT_TIME_REPORT, context, resp.getWriter());

@@ -56,7 +56,7 @@
                                 <span class="aui-icon icon-required"></span>
                                 <span class="content">required</span>
                             </label>
-                            <select name="project" id="project" class="text long-field">
+                            <select multiple name="project" id="project" class="text long-field">
                                 #foreach( $project in $allProjects )
                                     <option value="$project.getKey()">$project.getName()</option>
                                 #end

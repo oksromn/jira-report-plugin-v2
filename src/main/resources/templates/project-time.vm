@@ -6,7 +6,7 @@
     <body class="page-type-admin">
         <div class="content-container" id="issue-crud-container">
             <div class="content-body">
-                <h1>Project time report for "$project.getName()"</h1>
+                <h1>Project time report for #foreach($project in $projects) <span>"$project.getName()"</span> #end</h1>
 
                 #if ($errors && $errors.size()>0)
                     <div class="aui-message error shadowed crud-error">
@@ -34,7 +34,7 @@
                             <tbody>
                                 #foreach($issue in $issues)
                                 <tr class="issue-line">
-                                    <td>$project.getName()</td>
+                                    <td>$issue.getProjectObject().getName()</td>
                                     <td>$issue.getAssignee().getName()</td>
                                     <td>$issue.getSummary()</td>
                                     <td>
