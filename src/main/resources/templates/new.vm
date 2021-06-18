@@ -110,8 +110,9 @@
                                 <span class="content">required</span>
                             </label>
                             <select name="project" id="project" class="text long-field">
+                                <option value="">All</option>
+                                
                                 #foreach( $project in $allProjects )
-                                    <option value="">All</option>
                                     <option value="$project.getKey()">$project.getName()</option>
                                 #end
                             </select>
